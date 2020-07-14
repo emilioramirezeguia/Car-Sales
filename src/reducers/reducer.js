@@ -1,5 +1,6 @@
 import { ADD_FEATURE } from "../actions/additionalFeatureAction";
 import { REMOVE_FEATURE } from "../actions/addedFeatureAction";
+import { bindActionCreators } from "redux";
 
 const initialState = {
   additionalPrice: 0,
@@ -28,6 +29,13 @@ export const reducer = (state = initialState, action) => {
           ...state.car,
           features: [...state.car.features, action.payload],
         },
+        additionalFeatures: state.additionalFeatures.filter(
+          (additionalFeature) => {
+            if (additionalFeature.id !== action.payload.id) {
+              return additionalFeature;
+            }
+          }
+        ),
       };
     case REMOVE_FEATURE:
       return {
@@ -35,11 +43,12 @@ export const reducer = (state = initialState, action) => {
         car: {
           ...state.car,
           features: state.car.features.filter((feature) => {
-            if (feature.id !== action.payload) {
+            if (feature.id !== action.payload.id) {
               return feature;
             }
           }),
         },
+        additionalFeatures: [...state.additionalFeatures, action.payload],
       };
     default:
       return state;
